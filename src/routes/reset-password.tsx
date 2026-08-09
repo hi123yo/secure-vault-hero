@@ -35,7 +35,10 @@ function ResetPassword() {
     setBusy(true);
     const { error } = await supabase.auth.updateUser({ password });
     setBusy(false);
-    if (error) return toast.error(error.message);
+    if (error) {
+      toast.error(error.message);
+      return;
+    }
     toast.success("Master password updated.");
     sessionStorage.setItem("ironclad:unlocked", "1");
     navigate({ to: "/vault", replace: true });
