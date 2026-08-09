@@ -15,6 +15,8 @@ import { Route as AuthRouteImport } from './routes/auth'
 import { Route as PlansRouteImport } from './routes/plans'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as AuthenticatedGeneratorRouteImport } from './routes/_authenticated/generator'
+import { Route as AuthenticatedSecurityRouteImport } from './routes/_authenticated/security'
+import { Route as AuthenticatedSettingsRouteImport } from './routes/_authenticated/settings'
 import { Route as AuthenticatedVaultIndexRouteImport } from './routes/_authenticated/vault.index'
 import { Route as AuthenticatedVaultItemIdRouteImport } from './routes/_authenticated/vault.$itemId'
 
@@ -47,6 +49,16 @@ const AuthenticatedGeneratorRoute = AuthenticatedGeneratorRouteImport.update({
   path: '/generator',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedSecurityRoute = AuthenticatedSecurityRouteImport.update({
+  id: '/security',
+  path: '/security',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedSettingsRoute = AuthenticatedSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedVaultIndexRoute = AuthenticatedVaultIndexRouteImport.update({
   id: '/vault/',
   path: '/vault/',
@@ -65,6 +77,8 @@ export interface FileRoutesByFullPath {
   '/plans': typeof PlansRoute
   '/reset-password': typeof ResetPasswordRoute
   '/generator': typeof AuthenticatedGeneratorRoute
+  '/security': typeof AuthenticatedSecurityRoute
+  '/settings': typeof AuthenticatedSettingsRoute
   '/vault/$itemId': typeof AuthenticatedVaultItemIdRoute
   '/vault/': typeof AuthenticatedVaultIndexRoute
 }
@@ -74,6 +88,8 @@ export interface FileRoutesByTo {
   '/plans': typeof PlansRoute
   '/reset-password': typeof ResetPasswordRoute
   '/generator': typeof AuthenticatedGeneratorRoute
+  '/security': typeof AuthenticatedSecurityRoute
+  '/settings': typeof AuthenticatedSettingsRoute
   '/vault/$itemId': typeof AuthenticatedVaultItemIdRoute
   '/vault': typeof AuthenticatedVaultIndexRoute
 }
@@ -85,6 +101,8 @@ export interface FileRoutesById {
   '/plans': typeof PlansRoute
   '/reset-password': typeof ResetPasswordRoute
   '/_authenticated/generator': typeof AuthenticatedGeneratorRoute
+  '/_authenticated/security': typeof AuthenticatedSecurityRoute
+  '/_authenticated/settings': typeof AuthenticatedSettingsRoute
   '/_authenticated/vault/$itemId': typeof AuthenticatedVaultItemIdRoute
   '/_authenticated/vault/': typeof AuthenticatedVaultIndexRoute
 }
@@ -96,6 +114,8 @@ export interface FileRouteTypes {
     | '/plans'
     | '/reset-password'
     | '/generator'
+    | '/security'
+    | '/settings'
     | '/vault/$itemId'
     | '/vault/'
   fileRoutesByTo: FileRoutesByTo
@@ -105,6 +125,8 @@ export interface FileRouteTypes {
     | '/plans'
     | '/reset-password'
     | '/generator'
+    | '/security'
+    | '/settings'
     | '/vault/$itemId'
     | '/vault'
   id:
@@ -115,6 +137,8 @@ export interface FileRouteTypes {
     | '/plans'
     | '/reset-password'
     | '/_authenticated/generator'
+    | '/_authenticated/security'
+    | '/_authenticated/settings'
     | '/_authenticated/vault/$itemId'
     | '/_authenticated/vault/'
   fileRoutesById: FileRoutesById
@@ -171,6 +195,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedGeneratorRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/security': {
+      id: '/_authenticated/security'
+      path: '/security'
+      fullPath: '/security'
+      preLoaderRoute: typeof AuthenticatedSecurityRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/settings': {
+      id: '/_authenticated/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof AuthenticatedSettingsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/vault/': {
       id: '/_authenticated/vault/'
       path: '/vault'
@@ -190,12 +228,16 @@ declare module '@tanstack/react-router' {
 
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedGeneratorRoute: typeof AuthenticatedGeneratorRoute
+  AuthenticatedSecurityRoute: typeof AuthenticatedSecurityRoute
+  AuthenticatedSettingsRoute: typeof AuthenticatedSettingsRoute
   AuthenticatedVaultItemIdRoute: typeof AuthenticatedVaultItemIdRoute
   AuthenticatedVaultIndexRoute: typeof AuthenticatedVaultIndexRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedGeneratorRoute: AuthenticatedGeneratorRoute,
+  AuthenticatedSecurityRoute: AuthenticatedSecurityRoute,
+  AuthenticatedSettingsRoute: AuthenticatedSettingsRoute,
   AuthenticatedVaultItemIdRoute: AuthenticatedVaultItemIdRoute,
   AuthenticatedVaultIndexRoute: AuthenticatedVaultIndexRoute,
 }
