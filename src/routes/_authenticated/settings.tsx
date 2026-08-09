@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { Lock, LogOut } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { profileQuery } from "@/lib/vault-queries";
-import { useLock } from "@/components/app/LockContext";
+import { useLock } from "@/components/app/lock-context";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -29,15 +29,19 @@ function SettingsPage() {
 
   const saveProfile = useMutation({
     mutationFn: async (patch: { display_name?: string; auto_lock_minutes?: number }) => {
-      const name = patch.display_name?.trim();
-      if (patch.display_name !== undefined && (!name || name.length > 80)) {
-        throw new Error("Enter a name between 1 and 80 characters.");
+      let update: { display_name?: string; auto_lock_minutes?: number } = patch;
+      if (patch.display_name !== undefined) {
+        const name = patch.display_name.trim();
+        if (!name || name.length > 80) {
+          throw new Error("Enter a name between 1 and 80 characters.");
+        }
+        update = { display_name: name };
       }
       const { data: auth } = await supabase.auth.getUser();
       if (!auth.user) throw new Error("Session expired.");
       const { error } = await supabase
         .from("profiles")
-        .update(patch.display_name !== undefined ? { display_name: name } : patch)
+        .update(update)
         .eq("id", auth.user.id);
       if (error) throw error;
     },
