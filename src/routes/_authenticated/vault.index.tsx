@@ -10,7 +10,7 @@ import { Input } from "@/components/ui/input";
 import { ItemDialog } from "@/components/app/ItemDialog";
 import { toast } from "sonner";
 
-export const Route = createFileRoute("/_authenticated/vault")({
+export const Route = createFileRoute("/_authenticated/vault/")({
   component: VaultList,
 });
 
