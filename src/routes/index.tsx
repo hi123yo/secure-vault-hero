@@ -1,24 +1,42 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { Navbar } from "@/components/Navbar";
+import { Hero } from "@/components/Hero";
 
-// No head() here: the home route inherits title/description/og/twitter from
-// __root.tsx, and ships no og:image so serve-time hosting can inject the
-// project's social preview (explicit og:image or latest screenshot).
 export const Route = createFileRoute("/")({
+  head: () => ({
+    meta: [
+      { title: "Ironclad — Lock Down Your Passwords" },
+      {
+        name: "description",
+        content:
+          "Unbreakable password storage, one-tap access, and pro-grade security tools for your non-stop world.",
+      },
+      { property: "og:title", content: "Ironclad — Lock Down Your Passwords" },
+      {
+        property: "og:description",
+        content:
+          "Unbreakable password storage, one-tap access, and pro-grade security tools for your non-stop world.",
+      },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
+    ],
+  }),
   component: Index,
 });
 
-// IMPORTANT: Replace this placeholder. See ./README.md for routing conventions.
 function Index() {
   return (
-    <div
-      className="flex min-h-screen items-center justify-center"
-      style={{ backgroundColor: "#fcfbf8" }}
-    >
-      <img
-        data-lovable-blank-page-placeholder="REMOVE_THIS"
-        src="https://cdn.gpteng.co/blank-app-v1.svg"
-        alt="Your app will live here!"
+    <main className="relative min-h-screen overflow-hidden">
+      <video
+        autoPlay
+        muted
+        loop
+        playsInline
+        className="absolute inset-0 z-0 w-full h-full object-cover"
+        src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260606_131516_eca35265-ea66-4fbd-8d52-22aae6e1a503.mp4"
       />
-    </div>
+      <Navbar />
+      <Hero />
+    </main>
   );
 }
