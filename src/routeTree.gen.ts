@@ -14,7 +14,9 @@ import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as PlansRouteImport } from './routes/plans'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
+import { Route as AuthenticatedGeneratorRouteImport } from './routes/_authenticated/generator'
 import { Route as AuthenticatedVaultIndexRouteImport } from './routes/_authenticated/vault.index'
+import { Route as AuthenticatedVaultItemIdRouteImport } from './routes/_authenticated/vault.$itemId'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -40,17 +42,30 @@ const ResetPasswordRoute = ResetPasswordRouteImport.update({
   path: '/reset-password',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedGeneratorRoute = AuthenticatedGeneratorRouteImport.update({
+  id: '/generator',
+  path: '/generator',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedVaultIndexRoute = AuthenticatedVaultIndexRouteImport.update({
   id: '/vault/',
   path: '/vault/',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedVaultItemIdRoute =
+  AuthenticatedVaultItemIdRouteImport.update({
+    id: '/vault/$itemId',
+    path: '/vault/$itemId',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/plans': typeof PlansRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/generator': typeof AuthenticatedGeneratorRoute
+  '/vault/$itemId': typeof AuthenticatedVaultItemIdRoute
   '/vault/': typeof AuthenticatedVaultIndexRoute
 }
 export interface FileRoutesByTo {
@@ -58,6 +73,8 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/plans': typeof PlansRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/generator': typeof AuthenticatedGeneratorRoute
+  '/vault/$itemId': typeof AuthenticatedVaultItemIdRoute
   '/vault': typeof AuthenticatedVaultIndexRoute
 }
 export interface FileRoutesById {
@@ -67,13 +84,29 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/plans': typeof PlansRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/_authenticated/generator': typeof AuthenticatedGeneratorRoute
+  '/_authenticated/vault/$itemId': typeof AuthenticatedVaultItemIdRoute
   '/_authenticated/vault/': typeof AuthenticatedVaultIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/auth' | '/plans' | '/reset-password' | '/vault/'
+  fullPaths:
+    | '/'
+    | '/auth'
+    | '/plans'
+    | '/reset-password'
+    | '/generator'
+    | '/vault/$itemId'
+    | '/vault/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/auth' | '/plans' | '/reset-password' | '/vault'
+  to:
+    | '/'
+    | '/auth'
+    | '/plans'
+    | '/reset-password'
+    | '/generator'
+    | '/vault/$itemId'
+    | '/vault'
   id:
     | '__root__'
     | '/'
@@ -81,6 +114,8 @@ export interface FileRouteTypes {
     | '/auth'
     | '/plans'
     | '/reset-password'
+    | '/_authenticated/generator'
+    | '/_authenticated/vault/$itemId'
     | '/_authenticated/vault/'
   fileRoutesById: FileRoutesById
 }
@@ -129,6 +164,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ResetPasswordRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/generator': {
+      id: '/_authenticated/generator'
+      path: '/generator'
+      fullPath: '/generator'
+      preLoaderRoute: typeof AuthenticatedGeneratorRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/vault/': {
       id: '/_authenticated/vault/'
       path: '/vault'
@@ -136,14 +178,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedVaultIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/vault/$itemId': {
+      id: '/_authenticated/vault/$itemId'
+      path: '/vault/$itemId'
+      fullPath: '/vault/$itemId'
+      preLoaderRoute: typeof AuthenticatedVaultItemIdRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
   }
 }
 
 interface AuthenticatedRouteRouteChildren {
+  AuthenticatedGeneratorRoute: typeof AuthenticatedGeneratorRoute
+  AuthenticatedVaultItemIdRoute: typeof AuthenticatedVaultItemIdRoute
   AuthenticatedVaultIndexRoute: typeof AuthenticatedVaultIndexRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedGeneratorRoute: AuthenticatedGeneratorRoute,
+  AuthenticatedVaultItemIdRoute: AuthenticatedVaultItemIdRoute,
   AuthenticatedVaultIndexRoute: AuthenticatedVaultIndexRoute,
 }
 
