@@ -16,7 +16,6 @@ function PrimaryButton({ className = "" }: { className?: string }) {
   return (
     <Link
       to="/auth"
-      search={{ mode: "signup" }}
       className={`text-sm font-semibold px-5 py-2.5 rounded-full transition-shadow hover:shadow-lg active:scale-95 ${className}`}
       style={{ backgroundColor: "#7342E2", color: "#fff" }}
     >
@@ -149,7 +148,6 @@ export function Navbar() {
               <div className="mt-auto flex flex-col gap-3 px-6 pb-8">
                 <Link
                   to="/auth"
-                  search={{ mode: "signup" }}
                   onClick={() => setOpen(false)}
                   className="w-full py-3.5 rounded-full font-semibold text-center transition-shadow hover:shadow-lg active:scale-95"
                   style={{ backgroundColor: "#7342E2", color: "#fff", fontSize: "0.95rem" }}
