@@ -5,6 +5,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useSession } from "@/hooks/useSession";
 import { AppShell } from "@/components/app/AppShell";
 import { LockContext } from "@/components/app/lock-context";
+import { SmsUnlock } from "@/components/app/SmsUnlock";
 import { Logo } from "@/components/Logo";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -52,6 +53,7 @@ function AuthenticatedLayout() {
     return (
       <UnlockScreen
         email={session.user.email ?? ""}
+        phone={session.user.phone ?? ""}
         onUnlock={() => {
           sessionStorage.setItem(UNLOCK_KEY, "1");
           setUnlocked(true);
@@ -69,10 +71,19 @@ function AuthenticatedLayout() {
   );
 }
 
-function UnlockScreen({ email, onUnlock }: { email: string; onUnlock: () => void }) {
+function UnlockScreen({
+  email,
+  phone,
+  onUnlock,
+}: {
+  email: string;
+  phone: string;
+  onUnlock: () => void;
+}) {
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
+  const [mode, setMode] = useState<"password" | "sms">("password");
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
@@ -89,34 +100,55 @@ function UnlockScreen({ email, onUnlock }: { email: string; onUnlock: () => void
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-secondary px-5">
-      <form
-        onSubmit={submit}
-        className="w-full max-w-sm rounded-3xl border border-border bg-card p-8 shadow-sm"
-      >
+      <div className="w-full max-w-sm rounded-3xl border border-border bg-card p-8 shadow-sm">
         <div className="mb-6 flex flex-col items-center gap-3 text-center">
           <span className="flex h-12 w-12 items-center justify-center rounded-full bg-accent text-accent-foreground">
             <LockKeyhole size={22} />
           </span>
           <h1 className="font-display text-2xl">Vault locked</h1>
           <p className="text-sm text-muted-foreground">
-            Enter your master password to unlock {email}.
+            {mode === "password"
+              ? `Enter your master password to unlock ${email}.`
+              : "Verify the code we text you to unlock your vault."}
           </p>
         </div>
-        <Label htmlFor="master">Master password</Label>
-        <Input
-          id="master"
-          type="password"
-          autoFocus
-          className="mt-1.5"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
-        {error && <p className="mt-2 text-sm text-destructive">{error}</p>}
-        <Button type="submit" className="mt-5 w-full rounded-full py-6" disabled={busy}>
-          {busy ? "Unlocking…" : "Unlock vault"}
-        </Button>
-      </form>
+        {mode === "password" ? (
+          <form onSubmit={submit}>
+            <Label htmlFor="master">Master password</Label>
+            <Input
+              id="master"
+              type="password"
+              autoFocus
+              className="mt-1.5"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+            {error && <p className="mt-2 text-sm text-destructive">{error}</p>}
+            <Button type="submit" className="mt-5 w-full rounded-full py-6" disabled={busy}>
+              {busy ? "Unlocking…" : "Unlock vault"}
+            </Button>
+          </form>
+        ) : (
+          <SmsUnlock phone={phone} onUnlock={onUnlock} />
+        )}
+        {phone ? (
+          <button
+            type="button"
+            className="mt-4 w-full text-sm font-medium text-primary underline"
+            onClick={() => {
+              setError(null);
+              setMode(mode === "password" ? "sms" : "password");
+            }}
+          >
+            {mode === "password" ? "Unlock with a text message instead" : "Use master password instead"}
+          </button>
+        ) : (
+          <p className="mt-4 text-center text-xs text-muted-foreground">
+            Want SMS unlock? Add a mobile number in Settings.
+          </p>
+        )}
+      </div>
     </div>
   );
 }
