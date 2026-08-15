@@ -1,29 +1,38 @@
 import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
+import { Link } from "@tanstack/react-router";
 import { Menu, X } from "lucide-react";
 import { Logo } from "./Logo";
 
-const NAV_LINKS = ["Vault", "Plans", "Install", "News", "Help"];
+const NAV_LINKS = [
+  { label: "Vault", to: "/vault" },
+  { label: "Generator", to: "/generator" },
+  { label: "Security", to: "/security" },
+  { label: "Plans", to: "/plans" },
+  { label: "Settings", to: "/settings" },
+] as const;
 
 function PrimaryButton({ className = "" }: { className?: string }) {
   return (
-    <button
+    <Link
+      to="/auth"
       className={`text-sm font-semibold px-5 py-2.5 rounded-full transition-shadow hover:shadow-lg active:scale-95 ${className}`}
       style={{ backgroundColor: "#7342E2", color: "#fff" }}
     >
       Start For Free
-    </button>
+    </Link>
   );
 }
 
 function SecondaryButton({ className = "" }: { className?: string }) {
   return (
-    <button
+    <Link
+      to="/auth"
       className={`text-sm font-semibold px-5 py-2.5 rounded-full transition-shadow hover:shadow-lg active:scale-95 ${className}`}
       style={{ backgroundColor: "#F2F2EE", color: "var(--color-text)" }}
     >
       Sign In
-    </button>
+    </Link>
   );
 }
 
@@ -40,14 +49,14 @@ export function Navbar() {
 
         <div className="hidden md:flex items-center gap-8">
           {NAV_LINKS.map((link) => (
-            <a
-              key={link}
-              href="#"
+            <Link
+              key={link.label}
+              to={link.to}
               className="text-sm font-medium transition-opacity hover:opacity-70"
               style={{ color: "var(--color-text)" }}
             >
-              {link}
-            </a>
+              {link.label}
+            </Link>
           ))}
         </div>
 
@@ -115,33 +124,40 @@ export function Navbar() {
 
               <div className="flex flex-col gap-1 px-6 py-6">
                 {NAV_LINKS.map((link, i) => (
-                  <motion.a
-                    key={link}
-                    href="#"
-                    onClick={() => setOpen(false)}
+                  <motion.div
+                    key={link.label}
                     initial={{ opacity: 0, x: 24 }}
                     animate={{
                       opacity: 1,
                       x: 0,
                       transition: { delay: 0.18 + i * 0.07, duration: 0.4 },
                     }}
-                    className="rounded-xl px-3 py-3 font-medium transition-colors hover:bg-black/10"
-                    style={{ fontSize: "1.1rem", color: "var(--color-text)" }}
                   >
-                    {link}
-                  </motion.a>
+                    <Link
+                      to={link.to}
+                      onClick={() => setOpen(false)}
+                      className="block rounded-xl px-3 py-3 font-medium transition-colors hover:bg-black/10"
+                      style={{ fontSize: "1.1rem", color: "var(--color-text)" }}
+                    >
+                      {link.label}
+                    </Link>
+                  </motion.div>
                 ))}
               </div>
 
               <div className="mt-auto flex flex-col gap-3 px-6 pb-8">
-                <button
-                  className="w-full py-3.5 rounded-full font-semibold transition-shadow hover:shadow-lg active:scale-95"
+                <Link
+                  to="/auth"
+                  onClick={() => setOpen(false)}
+                  className="w-full py-3.5 rounded-full font-semibold text-center transition-shadow hover:shadow-lg active:scale-95"
                   style={{ backgroundColor: "#7342E2", color: "#fff", fontSize: "0.95rem" }}
                 >
                   Start For Free
-                </button>
-                <button
-                  className="w-full py-3.5 rounded-full font-semibold transition-shadow hover:shadow-lg active:scale-95"
+                </Link>
+                <Link
+                  to="/auth"
+                  onClick={() => setOpen(false)}
+                  className="w-full py-3.5 rounded-full font-semibold text-center transition-shadow hover:shadow-lg active:scale-95"
                   style={{
                     backgroundColor: "#F2F2EE",
                     color: "var(--color-text)",
@@ -149,7 +165,7 @@ export function Navbar() {
                   }}
                 >
                   Sign In
-                </button>
+                </Link>
               </div>
             </motion.aside>
           </>
